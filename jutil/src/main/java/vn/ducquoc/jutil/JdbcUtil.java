@@ -24,10 +24,10 @@ public class JdbcUtil {
       conn = DriverManager.getConnection(url, username, password);
     }
     catch (ClassNotFoundException ex) {
-      throw new RuntimeException(ex.getMessage(), ex);
+      throw new UtilException(ex.getMessage(), ex);
     }
     catch (SQLException ex) {
-      throw new RuntimeException(ex.getMessage(), ex);
+      throw new UtilException(ex.getMessage(), ex);
     }
     return conn;
   }
@@ -45,7 +45,7 @@ public class JdbcUtil {
       }
     }
     catch (SQLException ex) {
-      throw new RuntimeException(ex.getMessage(), ex);
+      throw new UtilException(ex.getMessage(), ex);
     }
   }
 
@@ -59,7 +59,7 @@ public class JdbcUtil {
     }
     catch (SQLException ex) {
       releaseDbConnection(conn, stmt, null);
-      throw new RuntimeException(ex.getMessage(), ex);
+      throw new UtilException(ex.getMessage(), ex);
     }
     return affectedRows;
   }
@@ -74,7 +74,7 @@ public class JdbcUtil {
     }
     catch (SQLException ex) {
       releaseDbConnection(conn, stmt, null);
-      throw new RuntimeException(ex.getMessage(), ex);
+      throw new UtilException(ex.getMessage(), ex);
     }
     return result;
   }
