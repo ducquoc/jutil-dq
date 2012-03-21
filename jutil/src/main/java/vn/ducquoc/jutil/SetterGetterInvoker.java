@@ -53,7 +53,7 @@ public class SetterGetterInvoker<T> {
         if (parameterTypes.length == 1) {
           Object testValue = valueFactory.createValue(parameterTypes[0]);
           try {
-            System.out.println("Invoking set method: " + method.toString() + " with argument: " + testValue);
+//            System.out.println("Invoking set method: " + method.toString() + " with argument: " + testValue);
 
             method.invoke(testTarget, testValue);
             if (testValue instanceof Boolean) {
@@ -62,9 +62,9 @@ public class SetterGetterInvoker<T> {
               invokeGetter(targetClass, testValue, "get" + method.getName().substring(3));
             }
           } catch (IllegalAccessException ex) {
-            throw new UtilException("Failed to access setter method: " + method.toString(), ex);
+            throw new RuntimeException("Failed to access setter method: " + method.toString(), ex);
           } catch (InvocationTargetException ex) {
-            throw new UtilException("Failed to invoke setter method: " + method.toString(), ex);
+            throw new RuntimeException("Failed to invoke setter method: " + method.toString(), ex);
           }
         }
       }
@@ -82,15 +82,15 @@ public class SetterGetterInvoker<T> {
   private void invokeGetter(Class<?> targetClass, Object expectedValue, String getterName) {
     try {
       Method getterMethod = targetClass.getMethod(getterName);
-      System.out.println("Invoke get method: " + getterMethod.toString());
+//      System.out.println("Invoking get method: " + getterMethod.toString());
 
       getterMethod.invoke(testTarget);
     } catch (NoSuchMethodException ignore) {
-      System.out.println("This can be ignored - Getter does not exist: " + getterName);
+      System.out.println("[can be ignored] Getter does not exist: " + getterName + "() of " + targetClass.getSimpleName());
     } catch (IllegalAccessException ex) {
-      throw new UtilException("Failed to access getter method: " + getterName, ex);
+      throw new RuntimeException("Failed to access getter method: " + getterName, ex);
     } catch (InvocationTargetException ex) {
-      throw new UtilException("Failed to invoke getter method: " + getterName, ex);
+      throw new RuntimeException("Failed to invoke getter method: " + getterName, ex);
     }
   }
 
@@ -106,8 +106,8 @@ class ValueFactory {
     typeValues.put(String.class, "test");
     typeValues.put(Integer.class, Integer.valueOf(42));
     typeValues.put(Integer.TYPE, Integer.valueOf(42));
-    typeValues.put(Long.class, Long.valueOf(Integer.MAX_VALUE + 42));
-    typeValues.put(Long.TYPE, Long.valueOf(Integer.MAX_VALUE + 42));
+    typeValues.put(Long.class, Long.valueOf(42L + Integer.MAX_VALUE));
+    typeValues.put(Long.TYPE, Long.valueOf(42L + Integer.MAX_VALUE));
     typeValues.put(Boolean.class, Boolean.TRUE);
     typeValues.put(Boolean.TYPE, Boolean.TRUE);
   }
