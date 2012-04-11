@@ -8,7 +8,7 @@ import java.util.TimeZone;
 import org.apache.commons.lang.time.FastDateFormat;
 
 /**
- * Helper class for formatting and parsing Date.
+ * Alternate for java.text.SimpleDateFormat, but thread-safe and faster format.
  * 
  * @author ducquoc
  * @see org.apache.catalina.util.FastDateFormat

@@ -17,7 +17,7 @@ import vn.ducquoc.jutil.UtilException;
  * @see org.gbif.utils.mail.MailUtil
  * @see org.appfuse.util.MailUtil
  */
-public final class MailUtil {
+public class MailUtil {
 
   public static void sendEmail(String from, String to, String subject, String body, Properties props) {
     try {

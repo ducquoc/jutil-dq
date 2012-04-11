@@ -31,6 +31,27 @@
       <artifactId>mail</artifactId>
       <version>1.4.1</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.cassandra</groupId>
+      <artifactId>cassandra-all</artifactId>
+      <version>1.0.2</version>
+    </dependency>
+    <dependency>
+      <groupId>me.prettyprint</groupId>
+      <artifactId>hector-core</artifactId>
+      <version>1.0-1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
   </dependencies>
 
   <build>
