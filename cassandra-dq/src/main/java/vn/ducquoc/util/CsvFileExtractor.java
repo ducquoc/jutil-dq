@@ -1,7 +1,6 @@
 package vn.ducquoc.util;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,27 +8,41 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Base class for extracting data from flat files, usually CSV.
+ * Simple class to extract data from CSV and perform basic transformation.
  * 
  * @author ducquoc
  */
-public class FlatFileExtractor {
+public class CsvFileExtractor {
 
-    String dataFile;
-    String outputDir;
-    Map<String, String> rawData;
+    public static String DEFAULT_DELIMITER = "\t";
+    public static String COMMA_DELIMITER = ",";
+    public static String PIPE_DELIMITER = "|";
 
-    public FlatFileExtractor(String dataFile, String outputDir) {
+    public String dataFile;
+    public String outputDir;
+    public Map<String, String> rawData;
+
+    public String delimiter;
+
+    public CsvFileExtractor(String dataFile, String outputDir) {
         this.dataFile = dataFile;
         this.outputDir = outputDir;
         this.rawData = new LinkedHashMap<String, String>();
+        this.delimiter = DEFAULT_DELIMITER;
+    }
+
+    public CsvFileExtractor(String dataFile, String outputDir, String delimiter) {
+        this.dataFile = dataFile;
+        this.outputDir = outputDir;
+        this.rawData = new LinkedHashMap<String, String>();
+        this.delimiter = delimiter;
     }
 
     public void readRawData(boolean ignoreFirstLine) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(dataFile));
             if (ignoreFirstLine) {
-                reader.readLine(); // ignore first line
+                reader.readLine();
             }
 
             Long uniqueId = 1L;
@@ -38,8 +51,6 @@ public class FlatFileExtractor {
                 rawData.put(String.valueOf(uniqueId), nextLine);
                 uniqueId++;
             }
-        } catch (FileNotFoundException fnfEx) {
-            throw new RuntimeException("File Not Found", fnfEx);
         } catch (IOException ioEx) {
             throw new RuntimeException("In Out exception", ioEx);
         }
@@ -50,7 +61,8 @@ public class FlatFileExtractor {
 
         Map<String, String> result = new LinkedHashMap<String, String>();
         for (String rawEntry : rawData.keySet()) {
-            result.put(rawEntry, rawData.get(rawEntry));
+            String value = rawData.get(rawEntry).replaceAll(COMMA_DELIMITER, delimiter);
+            result.put(rawEntry, value);
         }
         return result;
     }
@@ -62,24 +74,34 @@ public class FlatFileExtractor {
         } catch (IOException ioEx) {
             throw new RuntimeException("In Out exception", ioEx);
         }
+        // not necessary "finally" here
 
         for (String key: resultData.keySet()) {
-            writer.println(resultData.get(key));
+            String [] fields = resultData.get(key).split(delimiter);
+            for (int i = 0; i < fields.length - 1; i++) {
+                writer.print(fields[i] + PIPE_DELIMITER);
+            }
+            writer.println(fields[fields.length - 1]);
         }
         writer.close();
     }
 
     public static void main(String[] args) {
         if (args.length == 2) {
-            FlatFileExtractor extractor = new FlatFileExtractor(args[0], args[1]);
+            CsvFileExtractor extractor = new CsvFileExtractor(args[0], args[1]);
             Map<String, String> resultData = extractor.extractData();
             extractor.writeResult(resultData);
-            System.out.println("Done. Output in " + args[1] + " folder.");
+        }
+        else if (args.length == 3) {
+            CsvFileExtractor extractor = new CsvFileExtractor(args[0], args[1], args[2]);
+            Map<String, String> resultData = extractor.extractData();
+            extractor.writeResult(resultData);
         }
         else {
-            System.out.println("Usage: java FlatFileExtractor <data file> <output directory>");
+            System.out.println("Usage: java CsvFileExtractor <data file> <output directory>");
             System.exit(1);
         }
+        System.out.println("Done. Output in " + args[1] + " folder.");
     }
 
 }
