@@ -17,9 +17,9 @@ import java.util.Map;
  */
 public class FlatFileExtractor {
 
-    String dataFile;
-    String outputDir;
-    Map<String, String> rawData;
+    public String dataFile;
+    public String outputDir;
+    public Map<String, String> rawData;
 
     public FlatFileExtractor(String dataFile, String outputDir) {
         this.dataFile = dataFile;

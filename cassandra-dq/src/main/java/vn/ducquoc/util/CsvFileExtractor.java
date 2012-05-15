@@ -68,22 +68,31 @@ public class CsvFileExtractor {
     }
 
     public void writeResult(Map<String, String> resultData) {
-        PrintWriter writer;
-        try {
-            writer = new PrintWriter(outputDir + "/output.out");
-        } catch (IOException ioEx) {
-            throw new RuntimeException("In Out exception", ioEx);
-        }
-        // not necessary "finally" here
+        PrintWriter writer = newWriter(outputDir + "/output.out");
+        PrintWriter crosswalkWriter = newWriter(outputDir + "/crosswalk.out");
 
         for (String key: resultData.keySet()) {
             String [] fields = resultData.get(key).split(delimiter);
+            crosswalkWriter.println(key + delimiter + fields[0]);
+
             for (int i = 0; i < fields.length - 1; i++) {
                 writer.print(fields[i] + PIPE_DELIMITER);
             }
             writer.println(fields[fields.length - 1]);
         }
+
         writer.close();
+        crosswalkWriter.close();
+    }
+
+    private PrintWriter newWriter(String filePath) {
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(filePath);
+        } catch (IOException ioEx) {
+            throw new RuntimeException("In Out exception", ioEx);
+        }
+        return writer;
     }
 
     public static void main(String[] args) {
