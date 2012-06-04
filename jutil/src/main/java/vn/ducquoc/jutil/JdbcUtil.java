@@ -1,6 +1,7 @@
 package vn.ducquoc.jutil;
 
 import java.io.PrintWriter;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -11,7 +12,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Helper class for JDBC operations.
+ * Helper class for JDBC operations, which aims to reduce boiler-plate code for
+ * common database interactions as well as <code>SQLException</code>s
  * 
  * @author ducquoc
  * @see org.apache.commons.dbutils.QueryRunner
@@ -104,7 +106,7 @@ public class JdbcUtil {
   public static boolean checkTableExists(Connection conn, String tableName) {
       try {
           DatabaseMetaData meta = conn.getMetaData();
-          ResultSet rset = meta.getTables(null, null, null, new String[] { "TABLE"});
+          ResultSet rset = meta.getTables(null, null, null, new String[] { "TABLE" });
           while (rset.next()) {
               if (rset.getString("TABLE_NAME").equalsIgnoreCase(tableName)) {
                   return true;
@@ -119,7 +121,7 @@ public class JdbcUtil {
   public static boolean checkViewExists(Connection conn, String tableName) {
       try {
           DatabaseMetaData meta = conn.getMetaData();
-          ResultSet rset = meta.getTables(null, null, null, new String[] { "VIEW"});
+          ResultSet rset = meta.getTables(null, null, null, new String[] { "VIEW" });
           while (rset.next()) {
               if (rset.getString("TABLE_NAME").equalsIgnoreCase(tableName)) {
                   return true;
@@ -170,6 +172,20 @@ public class JdbcUtil {
           printResultSetHeader(writer, rset, delimiter);
       }
       printResultSetData(writer, rset, delimiter);
+  }
+
+  public static CallableStatement executeCall(Connection conn, String callableQuery, Object... params) {
+      CallableStatement stmt = null;
+      try {
+        stmt = conn.prepareCall(callableQuery);
+        fillStatement(stmt, params);
+        stmt.execute();
+      }
+      catch (SQLException ex) {
+        releaseDbConnection(conn, stmt, null);
+        throw new UtilException(ex.getMessage(), ex);
+      }
+      return stmt;
   }
 
 }
