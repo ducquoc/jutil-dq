@@ -1,6 +1,8 @@
 package vn.ducquoc.jutil;
 
+import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +15,7 @@ import java.sql.Statement;
  * 
  * @author ducquoc
  * @see org.apache.commons.dbutils.QueryRunner
+ * @see org.springframework.jdbc.core.JdbcTemplate
  * @see org.skife.jdbi.v2.Handle
  */
 public class JdbcUtil {
@@ -96,6 +99,77 @@ public class JdbcUtil {
         }
       }
     }
+  }
+
+  public static boolean checkTableExists(Connection conn, String tableName) {
+      try {
+          DatabaseMetaData meta = conn.getMetaData();
+          ResultSet rset = meta.getTables(null, null, null, new String[] { "TABLE"});
+          while (rset.next()) {
+              if (rset.getString("TABLE_NAME").equalsIgnoreCase(tableName)) {
+                  return true;
+              }
+          }
+      } catch (SQLException ex) {
+          throw new UtilException(ex.getMessage(), ex);
+      }
+      return false;
+  }
+
+  public static boolean checkViewExists(Connection conn, String tableName) {
+      try {
+          DatabaseMetaData meta = conn.getMetaData();
+          ResultSet rset = meta.getTables(null, null, null, new String[] { "VIEW"});
+          while (rset.next()) {
+              if (rset.getString("TABLE_NAME").equalsIgnoreCase(tableName)) {
+                  return true;
+              }
+          }
+      } catch (SQLException ex) {
+          throw new UtilException(ex.getMessage(), ex);
+      }
+      return false;
+  }
+
+  public static boolean checkTableOrViewExists(Connection conn, String tableName) {
+      return checkTableExists(conn, tableName) || checkViewExists(conn, tableName);
+  }
+
+  public static void printResultSetData(PrintWriter writer, ResultSet rset, String delimiter) {
+      try {
+          ResultSetMetaData rsetMeta = rset.getMetaData();
+          int count = rsetMeta.getColumnCount();
+
+          while (rset.next()) {
+              for (int i = 1; i < count; i++) {
+                  writer.print(rset.getString(i) + delimiter);
+              }
+              writer.println(rset.getString(count));
+          }
+      } catch (SQLException ex) {
+          throw new UtilException(ex.getMessage(), ex);
+      }
+  }
+
+  public static void printResultSetHeader(PrintWriter writer, ResultSet rset, String delimiter) {
+      try {
+          ResultSetMetaData rsetMeta = rset.getMetaData();
+          int count = rsetMeta.getColumnCount();
+
+          for (int i = 1; i < count; i++) {
+              writer.print(rsetMeta.getColumnLabel(i) + delimiter);
+          }
+          writer.println(rsetMeta.getColumnLabel(count));
+      } catch (SQLException ex) {
+          throw new UtilException(ex.getMessage(), ex);
+      }
+  }
+
+  public static void printResultSet(PrintWriter writer, ResultSet rset, String delimiter, boolean includingHeader) {
+      if (includingHeader == true) {
+          printResultSetHeader(writer, rset, delimiter);
+      }
+      printResultSetData(writer, rset, delimiter);
   }
 
 }
