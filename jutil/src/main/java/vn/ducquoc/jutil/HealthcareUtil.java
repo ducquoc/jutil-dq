@@ -5,16 +5,17 @@ package vn.ducquoc.jutil;
  * 
  * @author ducquoc
  * @see com.gnuc.java.ccc.Luhn
- * @see https://www.claredi.com/download/npi_resources.php
+ * @see org.apache.commons.validator.routines.checkdigit.LuhnCheckDigit
  */
 public class HealthcareUtil {
 
     /**
-     * Checks for valid NPI number.
+     * Checks for valid NPI number
+     * (http://en.wikipedia.org/wiki/National_Provider_Identifier)
      * 
      * @param npiNumberText
-     * @return true if valid, false otherwise
-     * @see http://en.wikipedia.org/wiki/National_Provider_Identifier
+     * @return <code>true</code> if valid, <code>false</code> otherwise
+     * @see https://www.claredi.com/download/npi_resources.php
      */
     public static boolean isValidNpi(String npiNumberText) {
         if (npiNumberText == null || npiNumberText.matches("^(80840)?\\d{10}$") == false) {
@@ -33,11 +34,11 @@ public class HealthcareUtil {
     }
 
     public static long calcLuhnDigit(String npi9Number, int length) {
-        StringBuffer npiPad = new StringBuffer("");
+        StringBuffer padding = new StringBuffer("");
         for (int i = 0; i < length - npi9Number.length(); i++) {
-            npiPad.append("0");
+            padding.append("0");
         }
-        String npi = npiPad.toString() + npi9Number;
+        String npi = padding.toString() + npi9Number;
 
         long sumOfPrefix = 24; // 80840 ==> 8 + 0*2 + 8 + 4*2 + 0 = 24
         long sumOfDigits = 0;
@@ -58,6 +59,13 @@ public class HealthcareUtil {
         return (10 * (modulus10 + 1) - finalSum) % 10;
     }
 
+    /**
+     * Checks for valid DEA number (http://en.wikipedia.org/wiki/DEA_number)
+     * 
+     * @param deaText
+     * @return <code>true</code> if valid, <code>false</code> otherwise
+     * @see http://www.pharmacy-tech-study.com/dea-number-verification.html
+     */
     public static boolean isValidDea(String deaText) {
         if (deaText == null || deaText.matches("^([A-Za-z]{2})?\\d{7}$") == false) {
             return false;
