@@ -58,29 +58,36 @@ public class HealthcareUtil {
         return (10 * (modulus10 + 1) - finalSum) % 10;
     }
 
-    public static boolean luhnValidate(String numberString) {
-        char[] charArray = numberString.toCharArray();
-        int[] number = new int[charArray.length];
-        int total = 0;
-
-        for (int i = 0; i < charArray.length; i++) {
-            number[i] = Character.getNumericValue(charArray[i]);
-        }
-
-        for (int i = number.length - 2; i > -1; i -= 2) {
-            number[i] *= 2;
-
-            if (number[i] > 9)
-                number[i] -= 9;
-        }
-
-        for (int i = 0; i < number.length; i++)
-            total += number[i];
-
-        if (total % 10 != 0)
+    public static boolean isValidDea(String deaText) {
+        if (deaText == null || deaText.matches("^([A-Za-z]{2})?\\d{7}$") == false) {
             return false;
+        }
+        String deaNumber = (deaText.length() == 9) ? deaText.replaceFirst("^[A-Za-z]{2}", "") : deaText;
 
-        return true;
+        long checkDigit = Long.valueOf(deaNumber) % 10;
+        String dea6Number = deaNumber.replaceFirst(String.valueOf(checkDigit) + "$", "");
+
+        return checkDigit == calcDeaDigit(dea6Number);
+    }
+
+    public static long calcDeaDigit(String dea6Number) {
+        int length = 6;
+        StringBuffer padding = new StringBuffer("");
+        for (int i = 0; i < length - dea6Number.length(); i++) {
+            padding.append("0");
+        }
+        String npi = padding.toString() + dea6Number;
+
+        long sumOfDigits = 0;
+        for (int i = 0; i < length; i++) {
+            int digitValue = Integer.valueOf(npi.substring(i, i + 1));
+            if ((length - i) % 2 != 0) {
+                digitValue = 2 * digitValue;
+            }
+            sumOfDigits = sumOfDigits + digitValue;
+        }
+
+        return sumOfDigits % 10;
     }
 
 }
