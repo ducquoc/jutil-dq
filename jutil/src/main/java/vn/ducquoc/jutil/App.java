@@ -76,11 +76,10 @@ class AppFrame extends JFrame {
         validationButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent actionEvent) {
 
-                String npiText = validationTextField.getText();
-                boolean validNpi = HealthcareUtil.isValidNpi(npiText);
+                validationLabel.setText(""); // clean old message
 
-                validationLabel.setText("");
-                if (validNpi) {
+                String npiText = validationTextField.getText();
+                if (HealthcareUtil.isValidNpi(npiText)) {
                     validationLabel.setText("VALID  ");
                 } else {
                     validationLabel.setText("INVALID");
