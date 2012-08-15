@@ -78,7 +78,7 @@ class AppFrame extends JFrame {
 
                 validationLabel.setText(""); // clean old message
 
-                String npiText = validationTextField.getText();
+                String npiText = validationTextField.getText().trim();
                 if (HealthcareUtil.isValidNpi(npiText)) {
                     validationLabel.setText("VALID  ");
                 } else {
