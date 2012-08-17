@@ -3,7 +3,7 @@ Storm-DQ aims to provide a simple understanding of components (spouts/bolts) in 
 
 
 ### Project Location
-Primary development of storm-signals will take place at: 
+Primary development of storm-dq will take place at: 
 https://github.com/ducquoc/jutil-dq/tree/master/storm-dq
 
 
@@ -31,10 +31,11 @@ Storm-DQ provides a very simple mechanism for getting started with Storm.
 
 Storm is available on clojars repository.
 
+`
   <dependency>
     <groupId>storm</groupId>
     <artifactId>storm</artifactId>
     <version>0.8.0</version>
   </dependency>
-
+`
 
