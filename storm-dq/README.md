@@ -31,11 +31,9 @@ Storm-DQ provides a very simple mechanism for getting started with Storm.
 
 Storm is available on clojars repository.
 
-`
-  <dependency>
-    <groupId>storm</groupId>
-    <artifactId>storm</artifactId>
-    <version>0.8.0</version>
-  </dependency>
-`
+    <dependency>
+      <groupId>storm</groupId>
+      <artifactId>storm</artifactId>
+      <version>0.8.0</version>
+    </dependency>
 
