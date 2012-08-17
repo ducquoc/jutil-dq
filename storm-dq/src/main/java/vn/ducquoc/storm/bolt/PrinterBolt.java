@@ -17,8 +17,8 @@ public class PrinterBolt extends BaseRichBolt {
     }
 
     public void execute(Tuple inputTuple) {
-        // System.out.println(inputTuple);
-        System.out.println(inputTuple.getValue(0));
+        System.out.println(inputTuple);
+        // System.out.println(inputTuple.getValue(0));
     }
 
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
