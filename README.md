@@ -10,27 +10,24 @@ This can be considered Java code snippet store of mine (kind of playground).
 
 Just let it be ;-)
 
+### Usage
 
-### Building from Source
+**Basic Usage**
+
+Change directory to sub-folders and build the project.
+
+You may also execute the main class of some.
+
+#### Samples
 
   $ cd jutil
 
   $ mvn clean install
 
-### Usage
-
-**Basic Usage**
-
-TBA
-
-
-#### Samples
-
-TBA
-
-
 
 #### Running samples
 
-TBA
+  $ mvn compile exec:java -Dexec.classpathScope=compile -Dexec.mainClass=vn.ducquoc.jutil.App
+
+  $ mvn exec:java -Dexec.mainClass=vn.ducquoc.jutil.App
 

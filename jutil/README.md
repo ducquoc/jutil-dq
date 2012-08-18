@@ -1,19 +1,13 @@
 JUtil dq
 ==========
 
-Some utilities written in Java language.
-
 
 ### Rationale
 
-This can be considered Java code snippet store of mine (kind of playground).
-
-Just let it be ;-)
+Some utilities written in Java language. And some experiments with them.
 
 
 ### Building from Source
-
-  $ cd jutil
 
   $ mvn clean install
 
@@ -21,16 +15,14 @@ Just let it be ;-)
 
 **Basic Usage**
 
-TBA
+Running the JAR will display some GUI to verify NPI number or DEA id.
 
 
 #### Samples
 
-TBA
-
-
+  $ mvn compile exec:java -Dexec.classpathScope=compile -Dexec.mainClass=vn.ducquoc.jutil.App
 
 #### Running samples
 
-TBA
+  $ mvn exec:java -Dexec.mainClass=vn.ducquoc.jutil.App
 
