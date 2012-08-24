@@ -4,7 +4,7 @@
 
   <groupId>vn.ducquoc.storm</groupId>
   <artifactId>storm-dq</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>storm-dq</name>

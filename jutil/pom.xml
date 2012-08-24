@@ -10,7 +10,7 @@
   <packaging>jar</packaging>
 
   <name>jutil</name>
-  <url>https://github.com/ducquoc/jutil-dq</url>
+  <url>https://github.com/ducquoc/</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
