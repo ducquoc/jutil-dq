@@ -4,13 +4,17 @@ import java.util.Map;
 
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
+import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 
-public class InterrogativeBolt extends BaseRichBolt {
+/**
+ * @author ducquoc
+ * @see backtype.storm.task.IBolt
+ */
+public class InterrogativeBolt implements IRichBolt {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,6 +33,13 @@ public class InterrogativeBolt extends BaseRichBolt {
 
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields("word"));
+    }
+
+    public void cleanup() {
+    }
+
+    public Map<String, Object> getComponentConfiguration() {
+        return null;
     }
 
 }

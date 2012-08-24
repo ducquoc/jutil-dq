@@ -8,6 +8,10 @@ import backtype.storm.StormSubmitter;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.utils.Utils;
 
+/**
+ * @author ducquoc
+ * @see backtype.storm.topology.TopologyBuilder
+ */
 public class MultiQuestionTopology {
 
     public static void main(String[] args) throws Exception {

@@ -7,13 +7,17 @@ import java.util.Random;
 import backtype.storm.Config;
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
+import backtype.storm.topology.IRichSpout;
 import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
 
-public class RandomNpiNumberSpout extends BaseRichSpout {
+/**
+ * @author ducquoc
+ * @see backtype.storm.spout.ISpout
+ */
+public class RandomNpiNumberSpout implements IRichSpout {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,7 +38,7 @@ public class RandomNpiNumberSpout extends BaseRichSpout {
     }
 
     public void nextTuple() {
-        Utils.sleep(100);
+        Utils.sleep(1000);
         String[] npis = new String[] { "1234567893", "1901050181", "2203205598", "2901419657", "1808871341",
                 "220374080", "1234567897" };
         Random rand = new Random();
@@ -54,6 +58,25 @@ public class RandomNpiNumberSpout extends BaseRichSpout {
             return ret;
         }
         return null;
+    }
+
+    public boolean isDistributed() {
+        return true;
+    }
+
+    public void close() {
+    }
+
+    public void ack(Object msgId) {
+    }
+
+    public void fail(Object msgId) {
+    }
+
+    public void activate() {
+    }
+
+    public void deactivate() {
     }
 
 }

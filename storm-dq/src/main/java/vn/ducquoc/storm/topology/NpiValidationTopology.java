@@ -8,14 +8,18 @@ import backtype.storm.StormSubmitter;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.utils.Utils;
 
+/**
+ * @author ducquoc
+ * @see backtype.storm.topology.TopologyBuilder
+ */
 public class NpiValidationTopology {
 
     public static void main(String[] args) throws Exception {
 
         TopologyBuilder builder = new TopologyBuilder();
 
-        builder.setSpout("first-spout", new RandomNpiNumberSpout(), 7);
-        builder.setBolt("first-bolt", new NpiValidationBolt(), 5).shuffleGrouping("first-spout");
+        builder.setSpout("random-npi-spout", new RandomNpiNumberSpout(true), 2);
+        builder.setBolt("npi-validation-bolt", new NpiValidationBolt(), 3).shuffleGrouping("random-npi-spout");
 
         Config conf = new Config();
         conf.setDebug(true);
@@ -28,10 +32,10 @@ public class NpiValidationTopology {
             conf.setMaxTaskParallelism(3);
 
             LocalCluster cluster = new LocalCluster();
-            cluster.submitTopology("topology-dq", conf, builder.createTopology());
+            cluster.submitTopology("topologyTest", conf, builder.createTopology());
 
             Utils.sleep(10000);
-            // cluster.killTopology("topology-dq");
+            // cluster.killTopology("topologyTest");
             cluster.shutdown();
         }
     }

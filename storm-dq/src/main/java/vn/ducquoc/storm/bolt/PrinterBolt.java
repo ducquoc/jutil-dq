@@ -4,11 +4,15 @@ import java.util.Map;
 
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
+import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.tuple.Tuple;
 
-public class PrinterBolt extends BaseRichBolt {
+/**
+ * @author ducquoc
+ * @see backtype.storm.task.IBolt
+ */
+public class PrinterBolt implements IRichBolt {
 
     private static final long serialVersionUID = 1L;
 
@@ -21,7 +25,14 @@ public class PrinterBolt extends BaseRichBolt {
         // System.out.println(inputTuple.getValue(0));
     }
 
+    public void cleanup() {
+    }
+
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
+    }
+
+    public Map<String, Object> getComponentConfiguration() {
+        return null;
     }
 
 }

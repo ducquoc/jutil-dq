@@ -5,13 +5,17 @@ import java.util.Random;
 
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
+import backtype.storm.topology.IRichSpout;
 import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
 
-public class RandomSentenceSpout extends BaseRichSpout {
+/**
+ * @author ducquoc
+ * @see backtype.storm.spout.ISpout
+ */
+public class RandomSentenceSpout implements IRichSpout {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,6 +38,29 @@ public class RandomSentenceSpout extends BaseRichSpout {
 
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields("word"));
+    }
+
+    public void close() {
+    }
+
+    public void ack(Object msgId) {
+    }
+
+    public void fail(Object msgId) {
+    }
+
+    public boolean isDistributed() {
+        return true;
+    }
+
+    public void activate() {
+    }
+
+    public void deactivate() {
+    }
+
+    public Map<String, Object> getComponentConfiguration() {
+        return null;
     }
 
 }
