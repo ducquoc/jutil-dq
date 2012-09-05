@@ -14,7 +14,6 @@ import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
 
 /**
- * @author ducquoc
  * @see backtype.storm.spout.ISpout
  */
 public class RandomWordSpout implements IRichSpout {
