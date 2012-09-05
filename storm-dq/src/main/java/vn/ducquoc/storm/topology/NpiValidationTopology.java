@@ -18,7 +18,7 @@ public class NpiValidationTopology {
 
         TopologyBuilder builder = new TopologyBuilder();
 
-        builder.setSpout("random-npi-spout", new RandomNpiNumberSpout(true), 2);
+        builder.setSpout("random-npi-spout", new RandomNpiNumberSpout(true), 3);
         builder.setBolt("npi-validation-bolt", new NpiValidationBolt(), 3).shuffleGrouping("random-npi-spout");
 
         Config conf = new Config();
