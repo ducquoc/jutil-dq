@@ -25,7 +25,7 @@
   </repositories>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <storm.version>0.8.0</storm.version>
+    <storm.version>0.8.1</storm.version>
   </properties>
 
   <dependencies>

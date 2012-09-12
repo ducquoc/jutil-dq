@@ -67,7 +67,7 @@ public class HealthcareUtil {
      * @see http://www.pharmacy-tech-study.com/dea-number-verification.html
      */
     public static boolean isValidDea(String deaText) {
-        if (deaText == null || deaText.matches("^([ABFMPRabfmpr][A-Za-z])?\\d{7}$") == false) {
+        if (deaText == null || deaText.matches("^[ABFMPRabfmpr][A-Za-z]\\d{7}$") == false) {
             return false;
         }
         String deaNumber = (deaText.length() == 9) ? deaText.replaceFirst("^[A-Za-z]{2}", "") : deaText;
