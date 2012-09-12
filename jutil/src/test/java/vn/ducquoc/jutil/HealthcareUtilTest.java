@@ -92,4 +92,18 @@ public class HealthcareUtilTest {
         Assert.assertFalse(HealthcareUtil.isValidDea("AA000012"));
     }
 
+    @org.junit.Test
+    public void testValidDea_TypicalInvalidCasesByOIG() {
+        Assert.assertFalse(HealthcareUtil.isStrictlyValidDea("AA0000000"));
+        Assert.assertFalse(HealthcareUtil.isStrictlyValidDea("AB1111119"));
+        Assert.assertFalse(HealthcareUtil.isStrictlyValidDea("ZZ4567890"));
+        Assert.assertFalse(HealthcareUtil.isStrictlyValidDea("AB1234563"));
+        Assert.assertFalse(HealthcareUtil.isStrictlyValidDea("AA1111119"));
+        Assert.assertFalse(HealthcareUtil.isStrictlyValidDea("AB5555555"));
+        Assert.assertFalse(HealthcareUtil.isStrictlyValidDea("CC1462667"));
+        Assert.assertFalse(HealthcareUtil.isStrictlyValidDea("AS1111119"));
+        Assert.assertFalse(HealthcareUtil.isStrictlyValidDea("AS1234563"));
+        Assert.assertFalse(HealthcareUtil.isStrictlyValidDea("AM1111119"));
+    }
+
 }

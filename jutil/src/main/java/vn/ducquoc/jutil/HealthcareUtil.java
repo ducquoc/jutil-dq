@@ -9,6 +9,9 @@ package vn.ducquoc.jutil;
  */
 public class HealthcareUtil {
 
+    public static final String[] BLACKLISTED_DEA_IDS = { "AA0000000", "AB1111119", "ZZ4567890", "AB1234563",
+            "AA1111119", "AB5555555", "CC1462667", "AS1111119", "AS1234563", "AM1111119" };
+
     /**
      * Checks for valid NPI number
      * (http://en.wikipedia.org/wiki/National_Provider_Identifier)
@@ -96,6 +99,24 @@ public class HealthcareUtil {
         }
 
         return sumOfDigits % 10;
+    }
+
+    public static boolean isBlacklistedDea(String deaText) {
+        return java.util.Arrays.asList(BLACKLISTED_DEA_IDS).contains(deaText);
+    }
+
+    public static boolean isStrictlyValidDea(String deaText) {
+        return isValidDea(deaText) && !isBlacklistedDea(deaText);
+    }
+
+    public static boolean isActualPrefixNpi(String npiNumberText) {
+        String npiNumber = (npiNumberText != null && npiNumberText.length() == 15) ? npiNumberText.replaceFirst(
+                "^80840", "") : npiNumberText;
+        return npiNumber.matches("^[1234]");
+    }
+
+    public static boolean isStrictlyValidNpi(String npiNumberText) {
+        return isValidNpi(npiNumberText) && isActualPrefixNpi(npiNumberText);
     }
 
 }
