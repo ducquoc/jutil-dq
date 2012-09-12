@@ -43,26 +43,40 @@ public class HealthcareUtilTest {
     }
 
     @org.junit.Test
-    public void testValidDea() {
-        Assert.assertTrue(HealthcareUtil.isValidDea("1234563"));
-        Assert.assertTrue(HealthcareUtil.isValidDea("1987657"));
+    public void testValidDea_WrongPrefix() {
+        Assert.assertFalse(HealthcareUtil.isValidDea("1234563"));
+        Assert.assertFalse(HealthcareUtil.isValidDea("1987657"));
 
         Assert.assertFalse(HealthcareUtil.isValidDea("1234560"));
         Assert.assertFalse(HealthcareUtil.isValidDea("1987650"));
+
+        Assert.assertFalse(HealthcareUtil.isValidDea("CM1234563"));
+        Assert.assertFalse(HealthcareUtil.isValidDea("DM1234563"));
+        Assert.assertFalse(HealthcareUtil.isValidDea("EM1234563"));
+
+        Assert.assertFalse(HealthcareUtil.isValidDea("GP1987657"));
+        Assert.assertFalse(HealthcareUtil.isValidDea("HP1987657"));
+        Assert.assertFalse(HealthcareUtil.isValidDea("IP1987657"));
     }
 
     @org.junit.Test
-    public void testValidDea_WithPrefix() {
+    public void testValidDea_WithPrefix() { // starts with "A,B,F,M,P,R"
         Assert.assertTrue(HealthcareUtil.isValidDea("AM1234563"));
         Assert.assertTrue(HealthcareUtil.isValidDea("FP1987657"));
 
         Assert.assertFalse(HealthcareUtil.isValidDea("AM1234560"));
         Assert.assertFalse(HealthcareUtil.isValidDea("FP1987650"));
+
+        Assert.assertTrue(HealthcareUtil.isValidDea("BM1234563"));
+        Assert.assertTrue(HealthcareUtil.isValidDea("FM1234563"));
+        Assert.assertTrue(HealthcareUtil.isValidDea("PM1234563"));
+        Assert.assertTrue(HealthcareUtil.isValidDea("RM1234563"));
+        Assert.assertTrue(HealthcareUtil.isValidDea("MM1234563"));
     }
 
     @org.junit.Test
     public void testValidDea_CornerCases() {
-        Assert.assertTrue(HealthcareUtil.isValidDea("0000000"));
+        Assert.assertTrue(HealthcareUtil.isValidDea("AZ0000000"));
         Assert.assertTrue(HealthcareUtil.isValidDea("AA0000000"));
         Assert.assertTrue(HealthcareUtil.isValidDea("AA0000012"));
 
