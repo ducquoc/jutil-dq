@@ -28,7 +28,7 @@ public class ZipUtil {
                 System.out.println("Created directory " + destinationDir);
             }
 
-            String zipFullFilename = destinationDir + "/" + zipFilename;
+            String zipFullFilename = destinationDir + File.separator + zipFilename;
 
             ZipOutputStream zipOut = new ZipOutputStream(new FileOutputStream(zipFullFilename));
             for (String filename : sourcesFilenames) {
@@ -37,9 +37,7 @@ public class ZipUtil {
                     addZipEntryDir(zipOut, filename);
                 }
                 if (fileToZip.isFile()) {
-                    zipOut.putNextEntry(new ZipEntry(filename));
-                    addZipEntryFile(zipOut, fileToZip);
-                    zipOut.closeEntry();
+                    addZipEntryFile(zipOut, filename);
                 }
             }
             zipOut.close();
@@ -60,9 +58,7 @@ public class ZipUtil {
                 addZipEntryDir(zipOut, fileToZip.getPath()); // recursively
                 continue;
             }
-            zipOut.putNextEntry(new ZipEntry(fileToZip.getPath()));
-            addZipEntryFile(zipOut, fileToZip);
-            zipOut.closeEntry();
+            addZipEntryFile(zipOut, fileToZip.getPath());
         }
         if (dirList.length == 0) { // empty directory
             zipOut.putNextEntry(new ZipEntry(dirPath + File.separator + "."));
@@ -70,23 +66,16 @@ public class ZipUtil {
         }
     }
 
-    private static void addZipEntryFile(ZipOutputStream zipOut, File fileToZip) throws IOException {
+    private static void addZipEntryFile(ZipOutputStream zipOut, String filepath) throws IOException {
+        zipOut.putNextEntry(new ZipEntry(filepath));
         byte[] buffer = new byte[1024];
-        FileInputStream fin = new FileInputStream(fileToZip);
+        FileInputStream fin = new FileInputStream(new File(filepath));
         int length;
         while ((length = fin.read(buffer)) > 0) {
             zipOut.write(buffer, 0, length);
         }
         fin.close();
-    }
-
-
-    public static void main(String[] args) {
-        String[] fileNames = { "testEmpty", "src/main/java/vn/ducquoc/jutil/HealthcareUtil.java" };
-        List<String> names = Arrays.asList(fileNames);
-
-        boolean zipSuccess = ZipUtil.doZip("zip-dq.zip", ".", names);
-        System.out.println(zipSuccess ? "Zip done!" : "Failed to zip...");
+        zipOut.closeEntry();
     }
 
 }
