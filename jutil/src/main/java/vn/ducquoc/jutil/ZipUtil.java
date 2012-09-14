@@ -51,6 +51,25 @@ public class ZipUtil {
         }
     }
 
+    private static void addZipEntryDir(ZipOutputStream zipOut, String dirPath) throws IOException {
+        File zipDir = new File(dirPath);
+        String[] dirList = zipDir.list();
+        for (int i = 0; i < dirList.length; i++) {
+            File fileToZip = new File(zipDir, dirList[i]);
+            if (fileToZip.isDirectory()) {
+                addZipEntryDir(zipOut, fileToZip.getPath()); // recursively
+                continue;
+            }
+            zipOut.putNextEntry(new ZipEntry(fileToZip.getPath()));
+            addZipEntryFile(zipOut, fileToZip);
+            zipOut.closeEntry();
+        }
+        if (dirList.length == 0) { // empty directory
+            zipOut.putNextEntry(new ZipEntry(dirPath + File.separator + "."));
+            zipOut.closeEntry();
+        }
+    }
+
     private static void addZipEntryFile(ZipOutputStream zipOut, File fileToZip) throws IOException {
         byte[] buffer = new byte[1024];
         FileInputStream fin = new FileInputStream(fileToZip);
@@ -61,31 +80,9 @@ public class ZipUtil {
         fin.close();
     }
 
-    private static void addZipEntryDir(ZipOutputStream zipOut, String dirPath) throws IOException {
-        File zipDir = new File(dirPath);
-        String[] dirList = zipDir.list();
-        for (int i = 0; i < dirList.length; i++) {
-            File fileToZip = new File(zipDir, dirList[i]);
-            if (fileToZip.isDirectory()) {
-                String filePath = fileToZip.getPath();
-                addZipEntryDir(zipOut, filePath); // recursively
-                continue;
-            }
-            ZipEntry anEntry = new ZipEntry(fileToZip.getPath());
-            zipOut.putNextEntry(anEntry);
-            FileInputStream fis = new FileInputStream(fileToZip);
-            byte[] readBuffer = new byte[2156];
-            int bytesIn = 0;
-            while ((bytesIn = fis.read(readBuffer)) != -1) {
-                zipOut.write(readBuffer, 0, bytesIn);
-            }
-            fis.close();
-        }
-    }
-
 
     public static void main(String[] args) {
-        String[] fileNames = { "src/test/java/vn/ducquoc/jutil", "src/main/java/vn/ducquoc/jutil/HealthcareUtil.java" };
+        String[] fileNames = { "testEmpty", "src/main/java/vn/ducquoc/jutil/HealthcareUtil.java" };
         List<String> names = Arrays.asList(fileNames);
 
         boolean zipSuccess = ZipUtil.doZip("zip-dq.zip", ".", names);
