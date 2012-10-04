@@ -56,6 +56,20 @@ public class DeaValidationPanel extends JPanel {
                 }
             }
         });
+
+        validationTextField.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent actionEvent) {
+
+                validationLabel.setText(""); // clean old message
+
+                String deaText = validationTextField.getText().trim();
+                if (HealthcareUtil.isValidDea(deaText)) {
+                    validationLabel.setText("VALID  ");
+                } else {
+                    validationLabel.setText("INVALID");
+                }
+            }
+        });
     }
 
 }

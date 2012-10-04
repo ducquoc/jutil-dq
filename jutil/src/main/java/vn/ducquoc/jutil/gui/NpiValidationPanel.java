@@ -56,6 +56,20 @@ public class NpiValidationPanel extends JPanel {
                 }
             }
         });
+
+        validationTextField.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent actionEvent) {
+
+                validationLabel.setText(""); // clean old message
+
+                String npiText = validationTextField.getText().trim();
+                if (HealthcareUtil.isValidNpi(npiText)) {
+                    validationLabel.setText("VALID  ");
+                } else {
+                    validationLabel.setText("INVALID");
+                }
+            }
+        });
     }
 
 }
