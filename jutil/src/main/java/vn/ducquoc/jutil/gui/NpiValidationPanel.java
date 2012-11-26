@@ -12,7 +12,7 @@ import javax.swing.JTextField;
 
 import vn.ducquoc.jutil.HealthcareUtil;
 
-public class NpiValidationPanel extends JPanel {
+public class NpiValidationPanel extends JPanel implements ActionListener {
 
     private static final long serialVersionUID = 1L;
 
@@ -43,33 +43,20 @@ public class NpiValidationPanel extends JPanel {
         validationLabel.setFont(new Font("Arial", Font.BOLD, 11));
         validationPanel.add(validationLabel);
 
-        validationButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent actionEvent) {
+        validationButton.addActionListener(this);
 
-                validationLabel.setText(""); // clean old message
-
-                String npiText = validationTextField.getText().trim();
-                if (HealthcareUtil.isValidNpi(npiText)) {
-                    validationLabel.setText("VALID  ");
-                } else {
-                    validationLabel.setText("INVALID");
-                }
-            }
-        });
-
-        validationTextField.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent actionEvent) {
-
-                validationLabel.setText(""); // clean old message
-
-                String npiText = validationTextField.getText().trim();
-                if (HealthcareUtil.isValidNpi(npiText)) {
-                    validationLabel.setText("VALID  ");
-                } else {
-                    validationLabel.setText("INVALID");
-                }
-            }
-        });
+        validationTextField.addActionListener(this);
     }
 
+    public void actionPerformed(ActionEvent actionEvent) {
+
+        validationLabel.setText(""); // clean old message
+
+        String npiText = validationTextField.getText().trim();
+        if (HealthcareUtil.isValidNpi(npiText)) {
+            validationLabel.setText("VALID  ");
+        } else {
+            validationLabel.setText("INVALID");
+        }
+    }
 }

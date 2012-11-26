@@ -12,7 +12,7 @@ import javax.swing.JTextField;
 
 import vn.ducquoc.jutil.HealthcareUtil;
 
-public class DeaValidationPanel extends JPanel {
+public class DeaValidationPanel extends JPanel implements ActionListener {
 
     private static final long serialVersionUID = 1L;
 
@@ -43,33 +43,20 @@ public class DeaValidationPanel extends JPanel {
         validationLabel.setFont(new Font("Arial", Font.BOLD, 11));
         validationPanel.add(validationLabel);
 
-        validationButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent actionEvent) {
+        validationButton.addActionListener(this);
 
-                validationLabel.setText(""); // clean old message
+        validationTextField.addActionListener(this);
+    }
 
-                String deaText = validationTextField.getText().trim();
-                if (HealthcareUtil.isValidDea(deaText)) {
-                    validationLabel.setText("VALID  ");
-                } else {
-                    validationLabel.setText("INVALID");
-                }
-            }
-        });
+    public void actionPerformed(ActionEvent actionEvent) {
+        validationLabel.setText(""); // clean old message
 
-        validationTextField.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent actionEvent) {
-
-                validationLabel.setText(""); // clean old message
-
-                String deaText = validationTextField.getText().trim();
-                if (HealthcareUtil.isValidDea(deaText)) {
-                    validationLabel.setText("VALID  ");
-                } else {
-                    validationLabel.setText("INVALID");
-                }
-            }
-        });
+        String deaText = validationTextField.getText().trim();
+        if (HealthcareUtil.isValidDea(deaText)) {
+            validationLabel.setText("VALID  ");
+        } else {
+            validationLabel.setText("INVALID");
+        }
     }
 
 }
