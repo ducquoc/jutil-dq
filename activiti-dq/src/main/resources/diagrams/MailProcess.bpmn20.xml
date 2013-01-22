@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="mail_process1" name="mail_process1">
+    <startEvent id="startevent1" name="Start"></startEvent>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <serviceTask id="customMailTask" name="CustomMailTask" activiti:class="vn.ducquoc.activiti.task.CustomMailTask">
+      <extensionElements>
+        <activiti:field name="sender">
+          <activiti:expression>${mailConfig.user}@gmail.com</activiti:expression>
+        </activiti:field>
+        <activiti:field name="subject">
+          <activiti:expression>${mailNotification.general.subject}</activiti:expression>
+        </activiti:field>
+        <activiti:field name="content">
+          <activiti:string>sent from Activity</activiti:string>
+        </activiti:field>
+        <activiti:field name="recipients">
+          <activiti:expression>${mailNotification.general.recipients}</activiti:expression>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="flow1" name="" sourceRef="startevent1" targetRef="customMailTask"></sequenceFlow>
+    <sequenceFlow id="flow2" name="" sourceRef="customMailTask" targetRef="endevent1"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_mail_process1">
+    <bpmndi:BPMNPlane bpmnElement="mail_process1" id="BPMNPlane_mail_process1">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35" width="35" x="100" y="120"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35" width="35" x="370" y="120"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="customMailTask" id="BPMNShape_customMailTask">
+        <omgdc:Bounds height="55" width="105" x="210" y="110"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="135" y="137"></omgdi:waypoint>
+        <omgdi:waypoint x="210" y="137"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="315" y="137"></omgdi:waypoint>
+        <omgdi:waypoint x="370" y="137"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
