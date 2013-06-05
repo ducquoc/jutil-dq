@@ -28,44 +28,67 @@ public class TreeMapSample extends JPanel {
 
     private static List<RectangleColoredNode<ArtifactBean>> createMockData() {
         ArtifactBean b1 = new ArtifactBean("1", 40d, "green");
-        ArtifactBean b2 = new ArtifactBean("2", 20d, "yellow");
+        ArtifactBean b2 = new ArtifactBean("2", 80d, "yellow");
         ArtifactBean b3 = new ArtifactBean("3", 70d, "red");
-        ArtifactBean b4 = new ArtifactBean("4", 30d, "blue");
+        ArtifactBean b4 = new ArtifactBean("4", 60d, "cyan");
         ArtifactBean b5 = new ArtifactBean("5", 100d, "orange");
-        ArtifactBean b6 = new ArtifactBean("6", 10d, "pink");
+        ArtifactBean b6 = new ArtifactBean("6", 50d, "pink");
         ArtifactBean b7 = new ArtifactBean("7", 140d, "11AAFF");
         ArtifactBean b8 = new ArtifactBean("8", 75d, "AA11CC");
         List<ArtifactBean> data = Arrays.asList(b1, b2, b3, b4, b5, b6, b7, b8);
 
-        Rectangle canvas = new Rectangle(0, 0, 320, 240);
+        Rectangle canvas = new Rectangle(10, 10, 320, 240);
         MetricsGetter<ArtifactBean> metrics = new NodeMetricsGetter<ArtifactBean>();
         MetricsService service = new MetricsServiceImpl();
-        List<RectangleColoredNode<ArtifactBean>> sliceDice = (List<RectangleColoredNode<ArtifactBean>>) service.layout(
+        List<RectangleColoredNode<ArtifactBean>> mapData = (List<RectangleColoredNode<ArtifactBean>>) service.layout(
                 data, canvas, metrics);
-        service.populateColor(sliceDice, "777777", metrics);
+        service.populateColor(mapData, "777777", metrics);
+        zoom(mapData, 3.);
 
-        return sliceDice;
+        return mapData;
+    }
+
+    private static void zoom(List<RectangleColoredNode<ArtifactBean>> mapData, double zoomFactor) {
+        for (RectangleColoredNode<ArtifactBean> node : mapData) {
+            Rectangle bound = node.getBound();
+            bound.x = zoomFactor * bound.x;
+            bound.y = zoomFactor * bound.y;
+            bound.width = zoomFactor * bound.width;
+            bound.height = zoomFactor * bound.height;
+            // node.setBound(bound);
+        }
     }
 
     private static void drawTreeMap(Graphics g, List<RectangleColoredNode<ArtifactBean>> mapData) {
         Graphics2D g2d = (Graphics2D) g;
         for (RectangleColoredNode<ArtifactBean> item : mapData) {
             if (item.getBound() != null) {
-                // DrawUtil.drawPlainRect(g2d, item.getBound(),
-                // ColorUtil.fromDensityCode(item.getColor()));
-                DrawUtil.fillRect(g2d, item.getBound(), ColorUtil.fromDensityCode(item.getColor()));
+                Rectangle rect = item.getBound();
+                Color color = ColorUtil.fromDensityCode(item.getColor());
+                // DrawUtil.drawPlainRect(g2d, rect, color);
+                DrawUtil.fillRect(g2d, rect, color);
+                String text = item.getObject().getName() + " ("
+                        + new NodeMetricsGetter<ArtifactBean>().getSizeValue(item.getObject()) + ")";
+                int strWidth = g.getFontMetrics().stringWidth(text);
+                int strHeight = g.getFontMetrics().getHeight();
+                int xPadding = (int) ((rect.width - strWidth) > 0 ? (rect.width - strWidth)/2 : 1);
+                int yPadding = (int) ((rect.height - strHeight) > 0 ? (rect.height + strHeight)/ 2 : strHeight - 1);
+                DrawUtil.drawString(g2d, text, (int) rect.x + xPadding, (int) rect.y + yPadding, Color.darkGray.darker());
             }
         }
     }
 
     public static void main(String[] args) {
-        final String[] params = new String[args.length];
-        System.arraycopy(args, 0, params, 0, args.length);
+        try {
+            javax.swing.UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        } catch (Exception ex) {
+            System.out.println("[WARN] Minor exception: " + ex.getMessage());
+        }
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    createAndShowGUI(params);
+                    createAndShowGUI();
                     saveToFile();
                 } catch (Exception e) {
                     System.err.println(e);
@@ -75,7 +98,7 @@ public class TreeMapSample extends JPanel {
         });
     }
 
-    public static void createAndShowGUI(String[] params) {
+    public static void createAndShowGUI() {
         JFrame frame = new JFrame("Sample treemap");
         frame.add(new TreeMapSample());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -86,11 +109,11 @@ public class TreeMapSample extends JPanel {
     }
 
     public static void saveToFile() {
-        BufferedImage img = new BufferedImage(400, 300, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage img = new BufferedImage(400, 350, BufferedImage.TYPE_INT_ARGB);
 
         Graphics offscreen = img.createGraphics();
         offscreen.setColor(Color.white);
-        offscreen.fillRect(0, 0, 400, 300);
+        offscreen.fillRect(0, 0, 400, 350);
         drawTreeMap(offscreen, createMockData());
 
         String filename = "/DucTest.png"; // "/DucTest.jpg"

@@ -2,6 +2,8 @@ package vn.ducquoc.visual.heatmap;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.DirectColorModel;
 import java.awt.image.WritableRaster;
@@ -27,6 +29,23 @@ public class DrawUtil {
      */
     public static void drawLine(Graphics g, int xStart, int yStart, int xEnd, int yEnd) {
         g.drawLine(xStart, yStart, xEnd, yEnd);
+    }
+
+    public static void drawString(Graphics g, String text, int x, int y) {
+        if (g instanceof Graphics2D) {
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.drawString(text, x, y);
+        }
+    }
+
+    public static void drawString(Graphics g, String text, int x, int y, Color color) {
+        final Color oldColor = g.getColor();
+        g.setColor(color);
+
+        DrawUtil.drawString(g, text, x, y);
+
+        g.setColor(oldColor);
     }
 
     public static void drawRect(Graphics g, Rectangle rec) {
