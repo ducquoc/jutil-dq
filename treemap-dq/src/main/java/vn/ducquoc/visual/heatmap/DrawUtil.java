@@ -12,6 +12,11 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+/**
+ * Utility for drawing (2D) objects.
+ * 
+ * @author ducquoc
+ */
 public class DrawUtil {
 
     private DrawUtil() {

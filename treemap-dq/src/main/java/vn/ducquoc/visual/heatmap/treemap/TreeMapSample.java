@@ -116,7 +116,7 @@ public class TreeMapSample extends JPanel {
         offscreen.fillRect(0, 0, 400, 350);
         drawTreeMap(offscreen, createMockData());
 
-        String filename = "/DucTest.png"; // "/DucTest.jpg"
+        String filename = "/TreeMapLayout.png"; // "/TreeMapLayout.jpg"
         DrawUtil.saveImageFile(filename, img);
     }
 }
