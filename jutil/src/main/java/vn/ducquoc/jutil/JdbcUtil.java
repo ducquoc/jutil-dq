@@ -29,10 +29,10 @@ public class JdbcUtil {
       conn = DriverManager.getConnection(url, username, password);
     }
     catch (ClassNotFoundException ex) {
-      throw new UtilException(ex.getMessage(), ex);
+      throw new RuntimeException(ex.getMessage(), ex);
     }
     catch (SQLException ex) {
-      throw new UtilException(ex.getMessage(), ex);
+      throw new RuntimeException(ex.getMessage(), ex);
     }
     return conn;
   }
@@ -50,7 +50,7 @@ public class JdbcUtil {
       }
     }
     catch (SQLException ex) {
-      throw new UtilException(ex.getMessage(), ex);
+      throw new RuntimeException(ex.getMessage(), ex);
     }
   }
 
@@ -64,7 +64,7 @@ public class JdbcUtil {
     }
     catch (SQLException ex) {
       releaseDbConnection(conn, stmt, null);
-      throw new UtilException(ex.getMessage(), ex);
+      throw new RuntimeException(ex.getMessage(), ex);
     }
     return affectedRows;
   }
@@ -79,13 +79,13 @@ public class JdbcUtil {
     }
     catch (SQLException ex) {
       releaseDbConnection(conn, stmt, null);
-      throw new UtilException(ex.getMessage(), ex);
+      throw new RuntimeException(ex.getMessage(), ex);
     }
     return result;
   }
 
   public static void fillStatement(PreparedStatement stmt, Object... params) throws SQLException {
-    if (params != null) {
+    if (params != null && params.length > 0) {
       ResultSetMetaData metadata = stmt.getMetaData();
       for (int i = 0; i < params.length; i++) {
         if (params[i] != null) {
@@ -113,7 +113,7 @@ public class JdbcUtil {
               }
           }
       } catch (SQLException ex) {
-          throw new UtilException(ex.getMessage(), ex);
+          throw new RuntimeException(ex.getMessage(), ex);
       }
       return false;
   }
@@ -128,7 +128,7 @@ public class JdbcUtil {
               }
           }
       } catch (SQLException ex) {
-          throw new UtilException(ex.getMessage(), ex);
+          throw new RuntimeException(ex.getMessage(), ex);
       }
       return false;
   }
@@ -149,7 +149,7 @@ public class JdbcUtil {
               writer.println(rset.getString(count));
           }
       } catch (SQLException ex) {
-          throw new UtilException(ex.getMessage(), ex);
+          throw new RuntimeException(ex.getMessage(), ex);
       }
   }
 
@@ -163,7 +163,7 @@ public class JdbcUtil {
           }
           writer.println(rsetMeta.getColumnLabel(count));
       } catch (SQLException ex) {
-          throw new UtilException(ex.getMessage(), ex);
+          throw new RuntimeException(ex.getMessage(), ex);
       }
   }
 
@@ -183,7 +183,7 @@ public class JdbcUtil {
       }
       catch (SQLException ex) {
         releaseDbConnection(conn, stmt, null);
-        throw new UtilException(ex.getMessage(), ex);
+        throw new RuntimeException(ex.getMessage(), ex);
       }
       return stmt;
   }
