@@ -11,5 +11,5 @@ mailNotification:
     subject: No-reply - NOTIFICATION from Activity
     sender: noreply.test.vn.01@gmail.com
     recipients:
-      - ducquoc@kms-technology.com
-      #- ducquoc.vn@gmail.com
+      #- quoc383011@gmail.com
+      - ducquoc.vn@gmail.com

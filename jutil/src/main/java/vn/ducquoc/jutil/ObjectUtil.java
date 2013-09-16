@@ -19,6 +19,16 @@ public class ObjectUtil {
         return (Integer) obj;
     }
 
+    public static Long getLong(Object obj) {
+        if (Number.class.isInstance(obj)) { // isAssignableFrom(obj.getClass())
+            return ((Number) obj).longValue();
+        }
+        if (obj instanceof String) {
+            return Long.valueOf((String) obj);
+        }
+        return (Long) obj;
+    }
+
     public static boolean equals(Object object1, Object object2) {
         if (object1 == object2) {
             return true;

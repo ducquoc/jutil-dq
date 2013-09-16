@@ -16,7 +16,7 @@ public class AppTest {
     private static String USER = "noreply.test.vn.01@gmail.com";
     private static String PWD = "noreply@2012";
     private static String FROM = "noreply.test.vn.01@gmail.com";
-    private static String TO = "ducquoc@kms-technology.com";
+    private static String TO = "ducquoc.vn@gmailcom"; //"quoc383011@gmail.com";
     private static String HOST = "smtp.gmail.com";
 
     @Test
@@ -40,7 +40,7 @@ public class AppTest {
 //        props.put(MailUtil.MAIL_PORT, "587");
 
         String subject = "noreply: Test DQ";
-        String body = "Invoked from Activity";
+        String body = "Invoked from Activity via MailUtil";
 
         MailUtil.sendEmail(props, FROM, subject, body, Arrays.asList(TO));
     }

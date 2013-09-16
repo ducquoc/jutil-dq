@@ -177,11 +177,12 @@ public class XmlUtil {
     }
 
     // TODO: moved to DigestUtil or FileUtil
-    public static byte[] createChecksumBytes(String filename, String checksumType) throws Exception {
+    public static byte[] createChecksumBytes(String filename, String checksumType) throws java.io.IOException,
+            java.security.NoSuchAlgorithmException {
         if (checksumType == null) { // MD5 by default
             checksumType = "MD5";
         }
-        java.io.InputStream fis =  new java.io.FileInputStream(filename);
+        java.io.InputStream fis = new java.io.FileInputStream(filename);
 
         byte[] buffer = new byte[1024];
         java.security.MessageDigest complete = java.security.MessageDigest.getInstance(checksumType);
@@ -198,12 +199,16 @@ public class XmlUtil {
         return complete.digest();
     }
 
-    public static String calculateMd5Checksum(String filename) throws Exception {
-        byte[] b = createChecksumBytes(filename, "MD5");
+    public static String calculateMd5Checksum(String filename) {
         String result = "";
-        // convert bytes to HEX strings
-        for (int i=0; i < b.length; i++) {
-            result += Integer.toString( ( b[i] & 0xff ) + 0x100, 16).substring( 1 );
+        try {
+            byte[] b = createChecksumBytes(filename, "MD5");
+            // convert bytes to HEX strings
+            for (int i = 0; i < b.length; i++) {
+                result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Error: " + ex.toString(), ex);
         }
         return result;
     }
