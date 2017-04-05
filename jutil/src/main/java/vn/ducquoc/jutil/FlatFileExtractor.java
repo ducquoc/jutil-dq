@@ -41,6 +41,8 @@ public class FlatFileExtractor {
                 rawData.put(String.valueOf(uniqueId), nextLine);
                 uniqueId++;
             }
+            //dataIs.close();
+            reader.close();
         } catch (IOException ioEx) {
             throw new RuntimeException("In Out exception", ioEx);
         }
