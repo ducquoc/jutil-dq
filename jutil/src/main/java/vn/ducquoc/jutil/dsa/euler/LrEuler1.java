@@ -23,21 +23,25 @@ import java.util.Map;
 public class LrEuler1 {
 
   public static String FILENAME_LR1 = "LrEuler1.txt";
+  public static String FILENAME_LR1_MIN = "LrEuler0.txt";
+  public static String FILENAME_LR1_MED = "LrEuler1_Medium.txt";
+  public static String FILENAME_LR1_MEDBIG = "LrEuler1_MedBig.txt";
+  public static String FILENAME_LR1_BIG = "LrEuler1_Big.txt";
 
-  public static int MAX_N = 10 ^ 7;// simple enough, no need long
-  public static int MAX_S = 10 ^ 5;
-  public static int MAX_L = 10 ^ 5;
+  public static int MAX_N = 10000000;// simple enough, no need long
+  public static int MAX_S = 100000;
+  public static int MAX_L = 100000;
 
   // may encapsulate in LrEuler1Bean to avoid static, KISS YAGNI
     public static int N;// square size, 1-based index
     public static int S;// commands list size
     public static int L;// queries list size
-  
+
     public static int[] w;// array of values (typically 0 -> N^2-1)
     public static int[] a;// array rows of w
     public static int[] b;// array cols of w
     public static int[] d;// arrays of offsets
-  
+
     // prefer simple array over Tuple approach (Pair, Triple, ...)
     public static int[][] m;// 2d array as matrix of N
     public static int[][] abd;// 2d array as matrix of S
@@ -48,9 +52,11 @@ public class LrEuler1 {
 
   public static void main(String[] args) {
 
+    long stopWatchStart = System.nanoTime();
     // doStraightImmediately("LrEuler0.txt");
     doStraightImmediately(FILENAME_LR1);
-
+    double milliSecs = (System.nanoTime() - stopWatchStart) / 1000000.0;
+//    System.out.printf("*** Sovled S.I M.P L.E in %f ms", milliSecs);
   }
 
 
@@ -192,8 +198,7 @@ public class LrEuler1 {
         }
       }
     }
-    // System.out.println("subM: BEFORE " +
-    // java.util.Arrays.deepToString(subM));
+    // System.out.println("subM: " + java.util.Arrays.deepToString(subM));
     rotateRight90(subM, 1 + di);
     // System.out.println("subM: AFTER " + java.util.Arrays.deepToString(subM));
     for (int i = 0; i < N; i++) {
