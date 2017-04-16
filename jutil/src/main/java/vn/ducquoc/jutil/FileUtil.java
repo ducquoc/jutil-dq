@@ -73,4 +73,22 @@ public class FileUtil {
     return readInputStream(fis);
   }
 
+  //
+  // Java 7+ methods (Eclipse/Maven may require JDK instead of JRE)
+  //
+  public static String readFileJ7(String path) throws IOException {
+    byte[] encoded = java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(path));
+
+    return new String(encoded);
+  }
+
+  public static String readFileJ7(String path, java.nio.charset.Charset charset) throws IOException {
+    byte[] encoded = java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(path));
+
+    if (charset == null) {
+      charset = java.nio.charset.StandardCharsets.UTF_8;
+    }
+    return new String(encoded, charset);
+  }
+
 }

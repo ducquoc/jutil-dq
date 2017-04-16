@@ -39,4 +39,15 @@ public class ObjectUtil {
         return object1.equals(object2);
     }
 
+    //
+    // Java 7+ methods (Eclipse/Maven may require JDK instead of JRE)
+    //
+    public static boolean equalsJ7(Object obj1, Object obj2) {
+      return java.util.Objects.equals(obj1, obj2);
+    }
+
+    public static boolean equalsJ7Deep(Object obj1, Object obj2) {
+      return java.util.Objects.deepEquals(obj1, obj2);
+    }
+
 }

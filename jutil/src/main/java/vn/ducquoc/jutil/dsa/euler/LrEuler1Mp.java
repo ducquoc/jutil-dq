@@ -62,7 +62,7 @@ public class LrEuler1Mp {
     long stopWatchStart = System.nanoTime();
     doMorePragmatic(FILENAME_LR1);
     double milliSecs = (System.nanoTime() - stopWatchStart) / 1000000.0;
-//    System.out.printf("*** Sovled S.I M.P L.E in %f ms", milliSecs);
+//    System.out.printf("*** Solved S.I M.P L.E in %f ms \n", milliSecs);
 
   }
 
