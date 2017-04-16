@@ -57,11 +57,11 @@ public class MatrixUtil {
   }
 
   public static int indexOf(int[] m, int target) {
-//    for (int i = 0; i < m.length; i++) {
-//      if (m[i] == target) return i;
-//    }
-//    return -1;
-    return java.util.Arrays.binarySearch(m, target);
+    //return java.util.Arrays.binarySearch(m, target);//sorted only
+    for (int i = 0; i < m.length; i++) {
+      if (m[i] == target) return i;
+    }
+    return -1;
   }
 
   public static int indexOfRow2DFrom1D(int index1D, int[] m) {
