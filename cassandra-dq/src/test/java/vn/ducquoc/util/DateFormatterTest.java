@@ -14,7 +14,7 @@ public class DateFormatterTest {
   public void testParsingWithCallable() throws Exception {
 
     // FIXME - dq: To see the bug, use SimpleDateFormat statement
-    // final DateFormat df = new java.text.SimpleDateFormat("yyyyMMdd");
+    //final java.text.DateFormat df = new java.text.SimpleDateFormat("yyyyMMdd");
     final DateFormatter df = new vn.ducquoc.util.DateFormatter("yyyyMMdd");
 
     Callable<Date> task = new Callable<Date>() {
@@ -27,8 +27,8 @@ public class DateFormatterTest {
     ExecutorService exec = Executors.newFixedThreadPool(5);
     List<Future<Date>> results = new ArrayList<Future<Date>>();
 
-    // perform 12 date conversions
-    for (int i = 0; i < 12; i++) {
+    // perform 42 date conversions, may adjust 12->120 depending on your computer
+    for (int i = 0; i < 42; i++) {
       results.add(exec.submit(task));
     }
     exec.shutdown();
@@ -43,7 +43,7 @@ public class DateFormatterTest {
   public void testFormattingWithRunnable() {
 
     // FIXME - dq: To see the bug, use SimpleDateFormat statement
-    // final java.text.DateFormat df = new java.text.SimpleDateFormat("dd-MMM-yyyy");
+    //final java.text.DateFormat df = new java.text.SimpleDateFormat("dd-MMM-yyyy");
     final DateFormatter df = new vn.ducquoc.util.DateFormatter("dd-MMM-yyyy");
 
     final String[] testdata = { "01-Jan-1999", "14-Feb-2001", "31-Dec-2007" };
@@ -55,8 +55,8 @@ public class DateFormatterTest {
       final int i2 = i;
       runnables[i] = new Runnable() {
         public void run() {
-          try {
-            for (int j = 0; j < 12; j++) {
+          try { // 42 here, may adjust 12->120 depending on your computer
+            for (int j = 0; j < 42; j++) {
               String str = testdata[i2];
               String str2 = null;
               /* synchronized(df) */{
