@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Properties;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import vn.ducquoc.util.MailUtil;
@@ -16,9 +17,10 @@ public class AppTest {
     private static String USER = "noreply.test.vn.01@gmail.com";
     private static String PWD = "noreply@2012";
     private static String FROM = "noreply.test.vn.01@gmail.com";
-    private static String TO = "ducquoc.vn@gmailcom"; //"quoc383011@gmail.com";
+    private static String TO = "ducquoc.vn@gmail.com"; //"quoc383011@gmail.com";
     private static String HOST = "smtp.gmail.com";
 
+    @Ignore
     @Test
     public void testApp() {
         Assert.assertTrue(true);

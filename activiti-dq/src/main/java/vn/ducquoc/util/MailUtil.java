@@ -11,13 +11,18 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 /**
- * Helper class for email operations.
+ * Helper class for email operations. <br>
+ * </br>
+ * Some SMTP like Gmail might need to allow Less Secure Apps to use their accounts
+ * (myaccount.google.com/lesssecureapps)
  * 
  * @author ducquoc
  * @see org.gbif.utils.mail.MailUtil
  * @see org.appfuse.util.MailUtil
  * @see org.apache.commons.mail.SimpleEmail
  * @see org.springframework.mail.javamail.JavaMailSenderImpl
+ * @see info.magnolia.module.publicuserregistration.MailUtil
+ * @see com.atlassian.mail.server.impl.SMTPMailServerImpl
  */
 public class MailUtil {
 

@@ -10,6 +10,7 @@ import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import vn.ducquoc.activiti.config.ConfigManager;
@@ -17,6 +18,7 @@ import vn.ducquoc.activiti.config.TenantConfig;
 
 public class SimpleProcessTest {
 
+    @Ignore
     @Test
     public void testStartingSimpleProcess() {
         ProcessEngine processEngine = ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration()
