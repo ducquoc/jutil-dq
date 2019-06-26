@@ -31,3 +31,13 @@ You may also execute the main class of some.
 
   $ mvn exec:java -Dexec.mainClass=vn.ducquoc.jutil.App
 
+#### References
+
+https://github.com/ducquoc/fresher-training
+
+https://bitbucket.org/ducquoc/dq-training
+
+https://gitlab.com/ducquoc/awesome-nocode
+
+
+
