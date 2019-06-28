@@ -37,7 +37,7 @@ https://github.com/ducquoc/fresher-training
 
 https://bitbucket.org/ducquoc/dq-training
 
-https://gitlab.com/ducquoc/awesome-nocode
+https://gitlab.com/ducquoc/euler-fun
 
-
+https://ducquoc.github.io/
 
