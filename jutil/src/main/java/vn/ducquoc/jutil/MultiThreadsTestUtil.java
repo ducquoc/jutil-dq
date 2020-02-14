@@ -9,10 +9,11 @@ import java.util.stream.IntStream;
  * @author ducquoc
  * @see ConcurrentUnit
  * @see Cactoos
+ * @see //ducquoc.wordpress.com/2012/04/07/java-thread-safe-example/
  */
 public class MultiThreadsTestUtil {
 
-    public static final int DEFAULT_THREAD_COUNT = 2;
+    public static final int DEFAULT_THREAD_COUNT = 4;
     public static final int DEFAULT_LOOP_COUNT = 1;
 
     private final int threadCount;
@@ -83,35 +84,6 @@ public class MultiThreadsTestUtil {
         executor.shutdownNow();
     }
 
-    public static void main(String args[]) throws Exception {
-        final java.text.DateFormat df = new java.text.SimpleDateFormat("dd-MMM-yyyy");
-        final String[] testdata = { "01-Jan-1999", "14-Feb-2001", "31-Dec-2007" };
-        final int loopCount = 7; //7 enough with CountDownLatch, without it would be 12->120 depending on your computer
-
-        Runnable runAction = () -> {
-//            IntStream.range(0, loopCount).forEach((i) -> {
-                try {
-                    String str = testdata[new java.util.Random().nextInt(testdata.length)];
-                    String str2 = null;
-                    /* synchronized(df) */
-                    {
-                        java.util.Date d = df.parse(str);
-                        str2 = df.format(d);
-                    }
-                    System.out.println("EXPECTED " + str + " ACTUAL " + str2);
-                } catch (Exception ex) {
-                    throw new RuntimeException("Parse failed: " + ex);
-                }
-//            });
-        };
-
-        //Callable<java.util.Date> task = () -> df.parse("20101010");
-
-        MultiThreadsTestUtil multiThreadsTestUtil = new MultiThreadsTestUtil(4, loopCount); //4 thread
-        multiThreadsTestUtil.spamRun(runAction);
-
-        multiThreadsTestUtil.shutdownNow(); //shutdownNow();
-        System.exit(0);
-    }
+    //exercise for readers: write main()/unitTest method to run DateFormat.parse() as in the link "example" above
 
 }

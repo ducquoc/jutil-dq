@@ -16,8 +16,8 @@ def printHelp():
     print "Usage: "
     print "  deployOnWas.py earOrWarFileWithExtension [appName] [nodeName] [serverName]"
     print "Example wsadmin (Linux/MacOSX `wsadmin.sh`, Windows `wsadmin.bat`): "
-    print "  wsadmin.sh -lang jython -user wsadmin -password SECRET -host localhost -f /tmp/deployOnWas.py /tmp/chdsvp-1.0.ear"
-    print "  wsadmin.sh -lang jython -user wsadmin -password SECRET -host localhost -port 8880 -f /tmp/deployOnWas.py build/libs/chdsvp-1.0.ear"
+    print "  wsadmin.sh -lang jython -user wsadmin -password SECRET -host localhost -f /tmp/deployOnWas.py /tmp/myapp-1.0.ear"
+    print "  wsadmin.sh -lang jython -user wsadmin -password SECRET -host localhost -port 8880 -f /tmp/deployOnWas.py build/libs/myapp-1.0.ear"
 
 def getDefaultWasAppName(earFile):
     baseNameFile = os.path.basename(earFile)
@@ -63,6 +63,9 @@ else:
         ##"-defaultbinding.datasource.jndi", dsJNDIName, "-defaultbinding.datasource.username", dsUserName,"-defaultbinding.datasource.password", dsPassword, "-defaultbinding.cf.jndi", connFactory, "-defaultbinding.ejbjndi.prefix", EJBprefix
         opts = bindOpt
         opts += ["-appname", appName, "-node", nodeName, "-server", serverName]
+        if (earFile.endswith(".war")):
+            contextRoot = "/" + appName.replace("-SNAPSHOT","").replace("_war","")
+            opts += ["-contextroot", contextRoot]
         AdminApp.install(earFile, opts)
 
     print "[DEBUG] Saving to master configuration..."

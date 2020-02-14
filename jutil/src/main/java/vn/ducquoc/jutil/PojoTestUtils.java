@@ -15,6 +15,8 @@ import java.util.*;
  * @author ducquoc
  * @see uk.co.jemos.podam.api.PodamFactoryImpl
  * @see com.github.javafaker.Faker
+ * @see org.springframework.test.util.ReflectionTestUtils
+ * @see com.github.publickey.test.pojo.AbstractPojoTester
  */
 public class PojoTestUtils {
 
