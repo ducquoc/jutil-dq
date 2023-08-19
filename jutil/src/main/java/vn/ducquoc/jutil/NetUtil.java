@@ -32,10 +32,10 @@ public class NetUtil {
       //conn.setDoOutput(false);
       conn.setInstanceFollowRedirects(true);// not enough,  handle below
       int statusCode = conn.getResponseCode();
-      if (statusCode == 200) {//HttpURLConnection.HTTP_OK
+      if (statusCode < 300 && statusCode >= 200) {//HttpURLConnection.HTTP_OK
         result = true;
       } //else 
-      if (statusCode == 301 || statusCode == 301 || statusCode == 303) {
+      if (statusCode == 301 || statusCode == 302 || statusCode == 303) {
         //redirects: HttpURLConnection.HTTP_ (MOVED_TEMP,MOVED_PERM,SEE_OTHER)
         String newUrlToRead = conn.getHeaderField("Location");
         return checkAvailable(newUrlToRead);

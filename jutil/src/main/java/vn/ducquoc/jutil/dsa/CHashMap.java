@@ -1,6 +1,6 @@
 package vn.ducquoc.jutil.dsa;
 
-import sun.misc.Unsafe;
+import sun.misc.Unsafe; // IDEA: Compiler, Java Compiler should not "Use '--release' option..."
 
 import java.io.IOException;
 import java.io.Serializable;
