@@ -109,6 +109,19 @@ public class Crypto {
         return lastLength;
     }
 
+    public static String compactKeyText(String keyText) {
+        return keyText.replaceAll("-----.*KEY-----", "") // remove BEGIN header & END footer
+                .replaceAll(System.lineSeparator(), "") // remove (\r)?(\n)+
+                .replaceAll("\\s+", ""); // trim()
+    }
+
+    public static byte[] compactKeyB64(byte[] key) throws UnsupportedEncodingException {
+        String keyText = encode64ToStr(key); // UTF-8
+        String keyCompact = compactKeyText(keyText);
+        byte[] canonicalKey = (keyCompact.length() >= keyText.length()) ? key : decode64(keyCompact.getBytes(UTF_8));
+        return canonicalKey; // return canonicalKey.length > key.length ? key : canonicalKey;
+    }
+
     public static void main(String[] args) throws Exception {
         System.out.println("[DEBUG] Testing using main method");
 //        System.out.println("hex2bin: => " + hex2bin("4BCAF3D7284F8AB3"));
@@ -128,6 +141,127 @@ public class Crypto {
 //        System.out.println("AES encrypted base64: " + encrypted64);
 //        String decrypted64 = AES.decrypt(encrypted64, hex2byteArr(K_32), null);
 //        System.out.println("AES decrypted base64: " + decrypted64);
+
+        final String K_PUB_R515 = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBANAiMcKmvMU3T9PKyXMr8M4TmGmj3GfK" +
+                "DqPh7lFDssVTjKyRsLJSSh01uXlDrkyiEELZjscUOXQHZ7WX4A3iaKkCAwEAAQ==";
+        final String K_PRI_R515 = "MIIBVQIBADANBgkqhkiG9w0BAQEFAASCAT8wggE7AgEAAkEA0CIxwqa8xTdP08rJ" +
+                "cyvwzhOYaaPcZ8oOo+HuUUOyxVOMrJGwslJKHTW5eUOuTKIQQtmOxxQ5dAdntZfg" +
+                "DeJoqQIDAQABAkAlTMuAJ+OSsHv059W8dzZ7qBVbcUtRqmt/QUE1fR1vsVu7Cl9B" +
+                "9ba18HwShEZuHQstg/TkAkAQJvNFiASIiaGBAiEA58bNXqOHb6n4zKFStVyJHQ9b" +
+                "2uQBQl1bWYB+0tTESxkCIQDl4tJ1wNOwJpNN8mqesR309Ff2zZRkK9umW7ycer5M" +
+                "EQIgbqCsS7zAG2NEtt9Va+1kILPBAySLGVMYFAtJ/XXCz5kCIQDRDNRQarrWbC32" +
+                "ayVUDELut6iqckaoVU3YWYIKVoBo0QIhALWqiOZkm8enj36T7YVV3fGG+zOEWjXf" +
+                "PbQkr+K0MV6D";
+        final String E_88 = "DAhcVY6EHLvkOaAZyegBb52v//TDI0+jz7fasHoXIuZVfCDNyAm8prL94t5qDnzMk9FjZZxa0XzwBcUtAarH1g==";
+        final String D_3 = "380";
+//        System.out.println("RSA decrypt: " + RSA.decrypt(E_88, decode64(K_PRI_R515.getBytes(UTF_8)), null));
+        String encRSA = RSA.encrypt(D_3, decode64(K_PUB_R515.getBytes(UTF_8)), null);
+        System.out.println("RSA encrypted: " + encRSA); // encrypted may vary each time, still decrypted OK
+        String decRSA = RSA.decrypt(encRSA, decode64(K_PRI_R515.getBytes(UTF_8)), null);
+        System.out.println("RSA decrypted: " + decRSA);
+    }
+
+    /**
+     * RSA decryptor/encryptor (built on top of JCE or BC).
+     *
+     * @author ducquoc
+     */
+    public static class RSA {
+        public static final String RSA = "RSA";
+        public static final String ECB_PKCS1 = "RSA/ECB/PKCS1Padding";
+        public static final String ECB_OAEP = "RSA/ECB/OAEPWithSHA-1AndMGF1Padding"; // Java 8+
+        public static final String ECB_OAEP_SHA256 = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding"; // 1024+ key size
+        public static final String NONE_PKCS1 = "RSA/None/PKCS1Padding"; // BC
+        public static final String NONE_OAEP = "RSA/NONE/OAEPWithSHA1AndMGF1Padding"; // BC
+        public static final String NONE_OAEP_SHA256 = "RSA/NONE/OAEPWithSHA256AndMGF1Padding"; // BC
+        public static final String RSA_DEFAULT_CIPHER = ECB_OAEP;
+        public static final int MIN_K_LENGTH = 515;
+        public static final int MEDIUM_K_LENGTH = 1024;
+        public static final int DEFAULT_K_LENGTH = 2048;
+
+        /**
+         * @param hexOrBase64 - default empty/false, i.e. base64 format by default.
+         */
+        public static String decrypt(String encrypted, byte key[], String mode, boolean... hexOrBase64)
+                throws GeneralSecurityException, UnsupportedEncodingException {
+            boolean hexInputFormat = (hexOrBase64.length > 0 && hexOrBase64[0]); // default: false -> base64
+            byte[] compactKey = compactKeyB64(key); // maybe already canonical
+//            System.out.println("[decrypt] key compact: " + compactKey.length + " bytes - original " + key.length);
+            boolean inputHex = encrypted.matches("[A-Fa-f0-9]+");
+            System.out.println("[decrypt] input " + (inputHex ? "Hex" : "Base64") + " detected - " + encrypted);
+            byte[] ciphertextBytes = (inputHex || hexInputFormat)
+                    ? hex2byteArr(encrypted) : decode64(encrypted.getBytes(UTF_8));
+            if (mode == null || mode.trim().length() == 0) {
+                mode = RSA_DEFAULT_CIPHER;
+            }
+
+            byte[] original = decryptAsym(ciphertextBytes, compactKey, mode);
+            String text = new String(original, UTF_8);
+            return text;
+        }
+
+        private static byte[] decryptAsym(byte[] ciphertextBytes, byte[] key, String mode)
+                throws NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException,
+                InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+            Cipher cipher = Cipher.getInstance(mode); // "SunJCE" or BC_PROV
+            PrivateKey privKey = makePrivateKey(key, mode);
+            cipher.init(Cipher.DECRYPT_MODE, privKey);
+            byte[] original = cipher.doFinal(ciphertextBytes);
+            return original;
+        }
+
+        private static PrivateKey makePrivateKey(byte[] key, String mode) throws UnsupportedEncodingException,
+                NoSuchAlgorithmException, InvalidKeySpecException {
+            byte[] canonicalKeyBytes = compactKeyB64(key); // make sure key is cannonical/compacted
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA"); // for now mode RSA only
+            try {
+                EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(canonicalKeyBytes);
+                return (java.security.interfaces.RSAPrivateKey) keyFactory.generatePrivate(keySpec); // ensure RSA
+            } catch (Exception ex) {
+                System.out.println("Failed gen private key PKCS8, Exception=" + ex.getMessage());
+                throw ex; // later: fallback to PKCS1 like BC
+            }
+        }
+
+        /**
+         * @param hexOrBase64 - default empty/false, i.e. base64 format by default.
+         */
+        public static String encrypt(String text, byte key[], String mode, boolean... hexOrBase64)
+                throws GeneralSecurityException, UnsupportedEncodingException {
+            boolean hexOutputFormat = (hexOrBase64.length > 0 && hexOrBase64[0]); // default: false -> base64
+            byte[] compactKey = compactKeyB64(key); // maybe already canonical
+//            System.out.println("[encrypt] key compact: " + compactKey.length + " bytes - original " + key.length);
+            if (mode == null || mode.trim().length() == 0) {
+                mode = RSA_DEFAULT_CIPHER;
+            }
+
+            byte[] encrypted = encryptAsym(text.getBytes(UTF_8), compactKey, mode);
+            String encryptedText = hexOutputFormat ? hex(encrypted, true) : encode64ToStr(encrypted);
+            return encryptedText;
+        }
+
+        private static byte[] encryptAsym(byte[] ciphertextBytes, byte[] key, String mode)
+                throws NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException,
+                InvalidKeySpecException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+            Cipher cipher = Cipher.getInstance(mode); // "SunJCE" or BC_PROV
+            PublicKey pubKey = makePublicKey(key, mode);
+            cipher.init(Cipher.ENCRYPT_MODE, pubKey);
+            byte[] original = cipher.doFinal(ciphertextBytes);
+            return original;
+        }
+
+        private static PublicKey makePublicKey(byte[] key, String mode) throws UnsupportedEncodingException,
+                NoSuchAlgorithmException, InvalidKeySpecException {
+            byte[] canonicalKeyBytes = compactKeyB64(key); // make sure key is cannonical/compacted
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA"); // for now mode RSA only
+            try {
+                EncodedKeySpec keySpec = new X509EncodedKeySpec(canonicalKeyBytes);
+                return (java.security.interfaces.RSAPublicKey) keyFactory.generatePublic(keySpec); // ensure RSA
+            } catch (Exception ex) {
+                System.out.println("Failed gen public key X509, Exception=" + ex.getMessage());
+                throw ex; // later: fallback to BC
+            }
+        }
     }
 
     /**
